@@ -1,4 +1,5 @@
-from mab_types import Arm
+from mab_types import Arm, MultiArmBandit
+from demo_mab_solver import BasicSolver
 
 def main():
     arms = [
@@ -7,8 +8,11 @@ def main():
         Arm.new("C", 0.2),
     ]
 
-    print("Hello from multiarm-bandit-problem!")
+    solver = BasicSolver(len(arms))
+    mab = MultiArmBandit(arms, solver)
+    mab.run()
 
+    print("Hello from multiarm-bandit-problem!")
 
 if __name__ == "__main__":
     main()

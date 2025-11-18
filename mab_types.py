@@ -2,6 +2,7 @@ from typing import Protocol
 from dataclasses import dataclass
 from random import random
 
+
 @dataclass
 class Arm:
     name: str
@@ -19,8 +20,27 @@ class Arm:
 
 
 class Solver(Protocol):
-	def set_arms(arms: list[Arm]):
+	def tick(self) -> int:
 		...
 
-	def tick() -> str:
-		...
+class MultiArmBandit:
+	_arms: list[Arm]
+	_solver: Solver
+	_ticks = 0
+
+	def __init__(self, arms: list[Arm], solver: Solver):
+		self._arms = arms
+		self._solver = solver
+		
+	def get_ticks(self):
+		return self._ticks
+
+	def tick(self):
+		self._ticks += 1
+		selected_arm = self._solver.tick()
+		result = self._arms[selected_arm].play()
+		print(f'{_ticks}: {result}')
+
+	def run(self, n=1_000_000):
+		for i in range(n):
+			self.tick()
