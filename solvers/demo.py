@@ -1,5 +1,4 @@
 import mab_types
-from mab_types import Arm
 
 class BasicSolver:
 	def __init__(self, n_arms: int):

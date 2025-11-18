@@ -1,5 +1,5 @@
 from mab_types import Arm, MultiArmBandit
-from demo_mab_solver import BasicSolver
+from solvers import BasicSolver
 
 def main():
     arms = [

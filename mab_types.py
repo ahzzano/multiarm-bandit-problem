@@ -31,7 +31,7 @@ class MultiArmBandit:
 	def __init__(self, arms: list[Arm], solver: Solver):
 		self._arms = arms
 		self._solver = solver
-		
+
 	def get_ticks(self):
 		return self._ticks
 
@@ -39,7 +39,7 @@ class MultiArmBandit:
 		self._ticks += 1
 		selected_arm = self._solver.tick()
 		result = self._arms[selected_arm].play()
-		print(f'{_ticks}: {result}')
+		print(f'{self._ticks}: {result}')
 
 	def run(self, n=1_000_000):
 		for i in range(n):
