@@ -65,7 +65,7 @@ class MultiArmBandit:
 		for i in range(n):
 			self.tick()
 		print('')
-		print(f'visits: {self._visits}')
-		print(f'wins: {self._wins}')
-		print(f'losses: {self._losses}')
+		print(f'visits : {self._visits}')
+		print(f'wins   : {self._wins}')
+		print(f'losses : {self._losses}')
 
