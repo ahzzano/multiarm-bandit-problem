@@ -47,11 +47,14 @@ class MultiArmBandit:
 	def get_ticks(self):
 		return self._ticks
 
-	def tick(self):
+	def tick(self, with_change=False):
 		self._ticks += 1
 		selected_arm = self._solver.tick()
 		result = self._arms[selected_arm].play()
-		print(f'Arm {self._arms[selected_arm].name:<10} Tick {self._ticks:<10}: {result:<5}', end='\r')
+		if with_change:
+			print(f'Arm {self._arms[selected_arm].name:<10} Tick {self._ticks:<10}: {result:<5} CHANGE TRIGGERED')
+		else:
+			print(f'Arm {self._arms[selected_arm].name:<10} Tick {self._ticks:<10}: {result:<5}', end='\r')
 		self._solver.update(result)
 		self._visits[selected_arm] += 1
 
@@ -60,14 +63,27 @@ class MultiArmBandit:
 		else:
 			self._losses[selected_arm] += 1
 
-	def run(self, n=1_000_000):
+	def apply_changes(self, new_probs: list[float]):
+		for arm, new_prob in zip(self._arms, new_probs):
+			arm.set_probability(new_prob)
+
+	def run(self, n=1_000_000, changes: dict[int, list[float]] = dict()):
 		self._visits = np.zeros(len(self._arms))
 		self._wins = np.zeros(len(self._arms))
 		self._losses = np.zeros(len(self._arms))
+
+		for a in self._arms:
+			a.reset()
+
 		self._ticks = 0
 
 		for i in range(n):
-			self.tick()
+			a = changes.get(i) != None
+			if a:
+				self.apply_changes(changes.get(i))
+
+			self.tick(with_change=a)
+
 		print('')
 		print(f'visits : {self._visits}')
 		print(f'wins   : {self._wins}')
