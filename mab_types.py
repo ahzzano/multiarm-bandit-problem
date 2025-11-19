@@ -7,10 +7,11 @@ import numpy as np
 class Arm:
     name: str
     probability: float = 0.5
+    default_probability: float = 0.5
 
     @classmethod
     def new(cls, name: str, probability):
-        return Arm(name, probability)
+        return Arm(name, probability, probability)
 
     def play(self) -> bool:
         if random() <= self.probability:
@@ -20,6 +21,9 @@ class Arm:
 
     def set_probability(self, probability: float):
     	self.probability = probability
+
+    def reset(self):
+    	self.probability = self.default_probability
 
 class Solver(Protocol):
 	def tick(self) -> int:
