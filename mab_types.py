@@ -84,8 +84,10 @@ class MultiArmBandit:
 
 			self.tick(with_change=a)
 
+		p_visits = (self._visits / n) * 100
 		print('')
-		print(f'visits : {self._visits}')
-		print(f'wins   : {self._wins}')
-		print(f'losses : {self._losses}')
+		print(f'visits : {self._visits} : Most Visited: {self._arms[np.argmax(self._visits)].name}')
+		print(f'wins   : {self._wins} : Most Wins: {self._arms[np.argmax(self._wins)].name}')
+		print(f'losses : {self._losses} : Most Losses: {self._arms[np.argmax(self._losses)].name}')
+		print(f'%visits: {p_visits}')
 
