@@ -6,6 +6,7 @@ def main():
         Arm.new("A", 0.4),
         Arm.new("B", 0.1),
         Arm.new("C", 0.7),
+        Arm.new("D", 0.6),
     ]
 
     # solver = BasicSolver(len(arms))

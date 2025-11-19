@@ -18,6 +18,8 @@ class Arm:
         else:
             return False
 
+    def set_probability(self, probability: float):
+    	self.probability = probability
 
 class Solver(Protocol):
 	def tick(self) -> int:
@@ -53,12 +55,12 @@ class MultiArmBandit:
 			self._wins[selected_arm] += 1
 		else:
 			self._losses[selected_arm] += 1
-		
 
 	def run(self, n=1_000_000):
 		self._visits = np.zeros(len(self._arms))
 		self._wins = np.zeros(len(self._arms))
 		self._losses = np.zeros(len(self._arms))
+		self._ticks = 0
 
 		for i in range(n):
 			self.tick()
