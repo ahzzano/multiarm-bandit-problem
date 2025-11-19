@@ -6,3 +6,6 @@ class BasicSolver:
 
 	def tick(self) -> int:
 		return 0
+
+	def update(self, outcome: bool):
+		return
