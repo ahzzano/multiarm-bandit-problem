@@ -9,7 +9,7 @@ def main():
 
     # solver = BasicSolver(len(arms))
     # solver = EpsilonGreedy(len(arms), 0.4)
-    solver = UpperConfidenceBound(len(arms), 30)
+    solver = UpperConfidenceBound(len(arms), 3)
 
     mab = MultiArmBandit(arms, solver)
     mab.run(n=500_000, changes = {

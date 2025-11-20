@@ -5,13 +5,13 @@ class UpperConfidenceBound:
 		self.c = c
 		self.visits = np.zeros(n_arms)
 		self.score = np.zeros(n_arms)
-		self.ticks = 0
+		self.ticks = 1
 		self.last_output = -1
 
 	def tick(self) -> int:
-		ri = self.score / (self.visits + 1e-5)
+		ri = self.score / (self.visits + 1e-5)		
 		self.ticks += 1
-		ucb = ri + self.c * np.sqrt(np.log(self.visits) / self.ticks)
+		ucb = ri + self.c * np.sqrt(np.log(self.ticks) / (self.visits + 1e-5))
 		self.last_output = int(np.argmax(ucb))
 
 		return self.last_output
