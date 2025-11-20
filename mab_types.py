@@ -68,15 +68,17 @@ class MultiArmBandit:
 			arm.set_probability(new_prob)
 
 	def run(self, n=1_000_000, changes: dict[int, list[float]] = dict()):
-		self._visits = np.zeros(len(self._arms))
-		self._wins = np.zeros(len(self._arms))
-		self._losses = np.zeros(len(self._arms))
+		self._visits = np.zeros(len(self._arms)).astype(int)
+		self._wins = np.zeros(len(self._arms)).astype(int)
+		self._losses = np.zeros(len(self._arms)).astype(int)
 
 		for a in self._arms:
 			a.reset()
 
 		self._ticks = 0
 
+		np.set_printoptions(precision=3)
+	
 		for i in range(n):
 			a = changes.get(i) != None
 			if a:
@@ -85,6 +87,7 @@ class MultiArmBandit:
 			self.tick(with_change=a)
 
 		p_visits = (self._visits / n) * 100
+
 		print('')
 		print(f'visits : {self._visits} : Most Visited: {self._arms[np.argmax(self._visits)].name}')
 		print(f'wins   : {self._wins} : Most Wins: {self._arms[np.argmax(self._wins)].name}')

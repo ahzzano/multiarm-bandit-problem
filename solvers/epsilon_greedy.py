@@ -13,8 +13,8 @@ class EpsilonGreedy:
 		if random() < self.epsilon:
 			self.last_output = randint(0, self.n_arms - 1)	
 		else:
-			self.last_output = np.argmax(self.satisfaction / (self.visits + 1e-5))
-			self.last_output = int(self.last_output)
+			output = np.argmax(self.satisfaction / (self.visits + 1e-5))
+			self.last_output = int(output)
 		
 		return self.last_output
 
