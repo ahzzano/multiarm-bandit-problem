@@ -9,10 +9,12 @@ def main():
 
     # solver = BasicSolver(len(arms))
     # solver = EpsilonGreedy(len(arms), 0.4)
-    solver = UpperConfidenceBound(len(arms), 3.25)
+    solver = UpperConfidenceBound(len(arms), 30)
 
     mab = MultiArmBandit(arms, solver)
-    mab.run(n=500_000)
+    mab.run(n=500_000, changes = {
+        100_000: [0.05, 0.9]
+        })
 
 if __name__ == "__main__":
     main()

@@ -7,3 +7,6 @@ Here is a toy model of the MultiArm Bandit problem.
 
 # Solvers 
 - BasicSolver - returns the first arm 
+- EpsilonGreedy
+- UpperConfidenceBOund
+- ThompsonSampling 
