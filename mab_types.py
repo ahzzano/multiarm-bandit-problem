@@ -90,7 +90,7 @@ class MultiArmBandit:
 		}
 
 		df = pd.DataFrame(data)
-		df.to_csv(filename)
+		df.to_csv(filename, index=False)
 
 
 	def run(self, n=1_000_000, changes: dict[int, list[float]] = dict()):

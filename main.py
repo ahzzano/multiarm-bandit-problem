@@ -4,7 +4,8 @@ from solvers import BasicSolver, EpsilonGreedy, UpperConfidenceBound, ThompsonSa
 def main():
     arms = [
         Arm.new("A", 0.5),
-        Arm.new("B", 0.45),
+        Arm.new("B", 0.3),
+        Arm.new("B", 0.1),
     ]
 
     solvers = [
