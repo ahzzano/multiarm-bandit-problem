@@ -5,7 +5,7 @@ def main():
     arms = [
         Arm.new("A", 0.5),
         Arm.new("B", 0.3),
-        Arm.new("B", 0.1),
+        Arm.new("C", 0.1),
     ]
 
     solvers = [
