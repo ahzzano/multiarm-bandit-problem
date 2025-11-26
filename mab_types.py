@@ -60,12 +60,16 @@ class MultiArmBandit:
 		self._solver.update(result)
 		self._visits[selected_arm] += 1
 
+		log_string = ''
+
 		if result:
 			self._wins[selected_arm] += 1
+			log_string = f'{self._arms[selected_arm].name}-win'
 		else:
 			self._losses[selected_arm] += 1
+			log_string = f'{self._arms[selected_arm].name}-loss'
 
-		self._logs.append(self._arms[selected_arm].name)
+		self._logs.append(log_string)
 
 	def apply_changes(self, new_probs: list[float]):
 		for arm, new_prob in zip(self._arms, new_probs):
