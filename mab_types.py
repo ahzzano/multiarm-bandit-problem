@@ -2,6 +2,7 @@ from typing import Protocol
 from dataclasses import dataclass
 from random import random
 import numpy as np 
+import pandas as pd
 
 @dataclass
 class Arm:
@@ -36,6 +37,7 @@ class MultiArmBandit:
 	_arms: list[Arm]
 	_solver: Solver
 	_ticks = 0
+	_logs: list[str] = []
 
 	def __init__(self, arms: list[Arm], solver: Solver):
 		self._arms = arms
@@ -63,9 +65,29 @@ class MultiArmBandit:
 		else:
 			self._losses[selected_arm] += 1
 
+		self._logs.append(self._arms[selected_arm].name)
+
 	def apply_changes(self, new_probs: list[float]):
 		for arm, new_prob in zip(self._arms, new_probs):
 			arm.set_probability(new_prob)
+
+	def write_logs(self, filename: str):
+		with open(filename, 'w+') as f:
+			for l in self._logs:
+				f.writelines(l+'\n')
+
+	def write_stats(self, filename: str):
+		arms = list(map(lambda a: a.name, self._arms))
+		data = {
+			'arm': arms, 
+			'visits': self._visits.tolist(),
+			'wins': self._wins.tolist(),
+			'losses': self._losses.tolist(),
+		}
+
+		df = pd.DataFrame(data)
+		df.to_csv(filename)
+
 
 	def run(self, n=1_000_000, changes: dict[int, list[float]] = dict()):
 		self._visits = np.zeros(len(self._arms)).astype(int)
@@ -80,11 +102,11 @@ class MultiArmBandit:
 		np.set_printoptions(precision=3)
 	
 		for i in range(n):
-			a = changes.get(i) != None
-			if a:
-				self.apply_changes(changes.get(i))
+			a = changes.get(i)
+			if a != None:
+				self.apply_changes(a)
 
-			self.tick(with_change=a)
+			self.tick(with_change=a != None)
 
 		p_visits = (self._visits / n) * 100
 

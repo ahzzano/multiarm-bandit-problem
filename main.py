@@ -1,5 +1,5 @@
 from mab_types import Arm, MultiArmBandit
-from solvers import BasicSolver, EpsilonGreedy, UpperConfidenceBound, ThompsonSampling
+from solvers import BasicSolver, EpsilonGreedy, UpperConfidenceBound, ThompsonSampling, ExploreOnly, ExploitOnly
 
 def main():
     arms = [
@@ -7,15 +7,26 @@ def main():
         Arm.new("B", 0.45),
     ]
 
-    # solver = BasicSolver(len(arms))
-    # solver = EpsilonGreedy(len(arms), 0.4)
-    # solver = UpperConfidenceBound(len(arms), 4)
-    solver = ThompsonSampling(len(arms))
+    solvers = [
+        # BasicSolver(len(arms)),
+        ExploreOnly(len(arms)),
+        ExploitOnly(len(arms)),
+        EpsilonGreedy(len(arms), 0.4),
+        UpperConfidenceBound(len(arms), 4),
+        ThompsonSampling(len(arms))
+    ]
 
-    mab = MultiArmBandit(arms, solver)
-    mab.run(n=1_500_000, changes = {
-        # 250_000: [0.05, 0.9]
+    solver_names = ['ExploreOnly', 'ExploitOnly', 'EpsilonGreedy', 'UCB', 'Thompson']
+
+    for n, s in zip(solver_names, solvers):
+        print('Solving...')
+        mab = MultiArmBandit(arms, s)
+        mab.run(n=10_000_000, changes = {
+            # 250_000: [0.05, 0.9]
         })
+
+        mab.write_logs(f'results/{n}.txt')
+        mab.write_stats(f'results/{n}.csv')
 
 if __name__ == "__main__":
     main()
