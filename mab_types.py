@@ -7,31 +7,28 @@ import pandas as pd
 
 
 class BooleanArm:
-    _name: str
-    probability: float = 0.5
+    def __init__(self, name, probability):
+        self._name = name
+        self.probability = probability
 
     @classmethod
     def new(cls, name: str, probability):
-        ba = BooleanArm()
-        ba._name = name 
-        ba.probability = probability
+        ba = BooleanArm(name, probability)
         return ba
 
-    def pull(self) -> Number:
+    def pull(self) -> int | float:
         if random() <= self.probability:
             return True
         else:
             return False
 
-    @property
     def name(self) -> str:
     	return self._name
 
 class Arm(Protocol):
-	def pull(self) -> Number:
+	def pull(self) -> int | float:
 		...
 
-	@property
 	def name(self) -> str:
 		...
 
@@ -62,7 +59,7 @@ class MultiArmBandit:
 		self._ticks += 1
 		selected_arm = self._solver.tick()
 		result = self._arms[selected_arm].pull()
-		print(f'Arm {self._arms[selected_arm].name:<10} Tick {self._ticks:<10}: {result:<5}', end='\r')
+		print(f'Arm {self._arms[selected_arm].name():<10} Tick {self._ticks:<10}: {result:<5}', end='\r')
 		self._solver.update(result)
 		self._visits[selected_arm] += 1
 
@@ -110,8 +107,8 @@ class MultiArmBandit:
 		p_visits = (self._visits / n) * 100
 
 		print('')
-		print(f'visits : {self._visits} : Most Visited: {self._arms[np.argmax(self._visits)].name}')
-		print(f'wins   : {self._wins} : Most Wins: {self._arms[np.argmax(self._wins)].name}')
-		print(f'losses : {self._losses} : Most Losses: {self._arms[np.argmax(self._losses)].name}')
+		print(f'visits : {self._visits} : Most Visited: {self._arms[np.argmax(self._visits)].name()}')
+		print(f'wins   : {self._wins} : Most Wins: {self._arms[np.argmax(self._wins)].name()}')
+		print(f'losses : {self._losses} : Most Losses: {self._arms[np.argmax(self._losses)].name()}')
 		print(f'%visits: {p_visits}')
 
