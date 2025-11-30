@@ -11,7 +11,7 @@ class ThompsonSampling:
 		self.last_result = int(np.argmax(result))
 		return self.last_result
 
-	def update(self, outcome: bool) -> None:
+	def update(self, outcome: int | float) -> None:
 		if outcome:
 			self.alpha[self.last_result] += 1
 		else:

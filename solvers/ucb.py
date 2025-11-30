@@ -17,7 +17,7 @@ class UpperConfidenceBound:
 		return self.last_output
 
 
-	def update(self, outcome: bool) -> None:
+	def update(self, outcome: int | float) -> None:
 		self.visits[self.last_output] += 1
 		if outcome:
 			self.score[self.last_output] += 1

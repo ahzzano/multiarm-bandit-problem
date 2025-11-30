@@ -18,7 +18,7 @@ class EpsilonGreedy:
 		
 		return self.last_output
 
-	def update(self, outcome: bool):
+	def update(self, outcome: int | float):
 		if outcome:
 			self.satisfaction[self.last_output] += 1
 

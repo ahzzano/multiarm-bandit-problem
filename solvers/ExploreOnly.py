@@ -7,5 +7,5 @@ class ExploreOnly:
 		self.i = (self.i + 1) % self.N 
 		return self.i
 
-	def update(self, outcome: bool) -> None:
+	def update(self, outcome: int | float) -> None:
 		return 

@@ -5,7 +5,6 @@ from random import random
 import numpy as np 
 import pandas as pd
 
-
 class BooleanArm:
     def __init__(self, name, probability):
         self._name = name
@@ -36,7 +35,7 @@ class Solver(Protocol):
 	def tick(self) -> int:
 		...
 
-	def update(self, outcome: Number) -> None:
+	def update(self, outcome: int | float) -> None:
 		...
 
 class MultiArmBandit:
