@@ -1,7 +1,7 @@
 from numbers import Number
 from typing import Protocol
 from dataclasses import dataclass
-from random import random
+from random import random, uniform
 import numpy as np 
 import pandas as pd
 
@@ -23,6 +23,18 @@ class BooleanArm:
 
     def name(self) -> str:
     	return self._name
+
+class Device:
+    def __init__(self, name, a, b):
+        self._name = name
+        self.a = a 
+        self.b = b
+
+    def pull(self) -> int | float:
+        return uniform(self.a, self.b)
+
+    def name(self) -> str:
+        return self._name
 
 class Arm(Protocol):
 	def pull(self) -> int | float:
@@ -57,21 +69,14 @@ class MultiArmBandit:
 	def tick(self):
 		self._ticks += 1
 		selected_arm = self._solver.tick()
+
 		result = self._arms[selected_arm].pull()
+
 		print(f'Arm {self._arms[selected_arm].name():<10} Tick {self._ticks:<10}: {result:<5}', end='\r')
 		self._solver.update(result)
 		self._visits[selected_arm] += 1
+		self._wins[selected_arm] += 1    
 
-		log_string = ''
-
-		if result:
-			self._wins[selected_arm] += 1
-			log_string = f'{self._arms[selected_arm].name}-win'
-		else:
-			self._losses[selected_arm] += 1
-			log_string = f'{self._arms[selected_arm].name}-loss'
-
-		self._logs.append(log_string)
 
 	def write_logs(self, filename: str):
 		with open(filename, 'w+') as f:
@@ -107,7 +112,6 @@ class MultiArmBandit:
 
 		print('')
 		print(f'visits : {self._visits} : Most Visited: {self._arms[np.argmax(self._visits)].name()}')
-		print(f'wins   : {self._wins} : Most Wins: {self._arms[np.argmax(self._wins)].name()}')
-		print(f'losses : {self._losses} : Most Losses: {self._arms[np.argmax(self._losses)].name()}')
+		print(f'scores   : {self._wins} : Most Wins: {self._arms[np.argmax(self._wins)].name()}')
 		print(f'%visits: {p_visits}')
 
