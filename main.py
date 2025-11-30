@@ -1,11 +1,11 @@
-from mab_types import Arm, MultiArmBandit
+from mab_types import BooleanArm, MultiArmBandit
 from solvers import BasicSolver, EpsilonGreedy, UpperConfidenceBound, ThompsonSampling, ExploreOnly, ExploitOnly
 
 def main():
     arms = [
-        Arm.new("A", 0.5),
-        Arm.new("B", 0.3),
-        Arm.new("C", 0.1),
+        BooleanArm.new("A", 0.5),
+        BooleanArm.new("B", 0.3),
+        BooleanArm.new("C", 0.1),
     ]
 
     solvers = [

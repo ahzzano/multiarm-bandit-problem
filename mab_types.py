@@ -1,36 +1,45 @@
+from numbers import Number
 from typing import Protocol
 from dataclasses import dataclass
 from random import random
 import numpy as np 
 import pandas as pd
 
-@dataclass
-class Arm:
-    name: str
+
+class BooleanArm:
+    _name: str
     probability: float = 0.5
-    default_probability: float = 0.5
 
     @classmethod
     def new(cls, name: str, probability):
-        return Arm(name, probability, probability)
+        ba = BooleanArm()
+        ba._name = name 
+        ba.probability = probability
+        return ba
 
-    def play(self) -> bool:
+    def pull(self) -> Number:
         if random() <= self.probability:
             return True
         else:
             return False
 
-    def set_probability(self, probability: float):
-    	self.probability = probability
+    @property
+    def name(self) -> str:
+    	return self._name
 
-    def reset(self):
-    	self.probability = self.default_probability
+class Arm(Protocol):
+	def pull(self) -> Number:
+		...
+
+	@property
+	def name(self) -> str:
+		...
 
 class Solver(Protocol):
 	def tick(self) -> int:
 		...
 
-	def update(self, outcome: bool) -> None:
+	def update(self, outcome: Number) -> None:
 		...
 
 class MultiArmBandit:
@@ -49,14 +58,11 @@ class MultiArmBandit:
 	def get_ticks(self):
 		return self._ticks
 
-	def tick(self, with_change=False):
+	def tick(self):
 		self._ticks += 1
 		selected_arm = self._solver.tick()
-		result = self._arms[selected_arm].play()
-		if with_change:
-			print(f'Arm {self._arms[selected_arm].name:<10} Tick {self._ticks:<10}: {result:<5} CHANGE TRIGGERED')
-		else:
-			print(f'Arm {self._arms[selected_arm].name:<10} Tick {self._ticks:<10}: {result:<5}', end='\r')
+		result = self._arms[selected_arm].pull()
+		print(f'Arm {self._arms[selected_arm].name:<10} Tick {self._ticks:<10}: {result:<5}', end='\r')
 		self._solver.update(result)
 		self._visits[selected_arm] += 1
 
@@ -70,10 +76,6 @@ class MultiArmBandit:
 			log_string = f'{self._arms[selected_arm].name}-loss'
 
 		self._logs.append(log_string)
-
-	def apply_changes(self, new_probs: list[float]):
-		for arm, new_prob in zip(self._arms, new_probs):
-			arm.set_probability(new_prob)
 
 	def write_logs(self, filename: str):
 		with open(filename, 'w+') as f:
@@ -98,19 +100,12 @@ class MultiArmBandit:
 		self._wins = np.zeros(len(self._arms)).astype(int)
 		self._losses = np.zeros(len(self._arms)).astype(int)
 
-		for a in self._arms:
-			a.reset()
-
 		self._ticks = 0
 
 		np.set_printoptions(precision=3)
 	
 		for i in range(n):
-			a = changes.get(i)
-			if a != None:
-				self.apply_changes(a)
-
-			self.tick(with_change=a != None)
+			self.tick()
 
 		p_visits = (self._visits / n) * 100
 
